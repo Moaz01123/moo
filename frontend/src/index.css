@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bone text-ink font-sans antialiased;
+}
+
+::selection {
+  @apply bg-ink text-bone;
+}
+
+/* Thin, brand-consistent scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f1ea;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9c1b3;
+}
+
+@layer components {
+  .container-kavo {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs font-semibold uppercase tracking-ultra transition-all duration-300;
+  }
+  .btn-solid {
+    @apply btn bg-ink text-bone hover:bg-carbon disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-outline {
+    @apply btn border border-ink/30 text-ink hover:border-ink hover:bg-ink hover:text-bone;
+  }
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-ultra text-smoke;
+  }
+  .field {
+    @apply w-full border border-ink/15 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-ink;
+  }
+  .hairline {
+    @apply border-ink/10;
+  }
+}
