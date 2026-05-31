@@ -1,14 +1,28 @@
+import os
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _default_database_url() -> str:
+    """Persist SQLite on a mounted volume when one is available.
+
+    On Fly.io a persistent volume is typically mounted at /data; using it keeps
+    products, orders and admin edits across restarts/redeploys. Falls back to a
+    local file for development.
+    """
+    for mount in ("/data", "/app/data"):
+        if os.path.isdir(mount) and os.access(mount, os.W_OK):
+            return f"sqlite:///{mount}/kavo.db"
+    return "sqlite:///./kavo.db"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    # Database. Defaults to a local SQLite file; set DATABASE_URL to a
-    # Postgres URL (postgresql+psycopg://...) in production.
-    database_url: str = "sqlite:///./kavo.db"
+    # Database. Defaults to a SQLite file (on a persistent volume if mounted);
+    # set DATABASE_URL to a Postgres URL (postgresql+psycopg://...) in production.
+    database_url: str = _default_database_url()
 
     # Auth
     jwt_secret: str = "kavo-dev-secret-change-me"
